@@ -1,0 +1,8 @@
+<h1>Edit your tweet</h1>
+
+<% if @tweet.retweeted_id? %>
+
+   <%= render 'edit_rt_form', tweet: @tweet %>
+<% else %>
+   <%= render 'form', tweet: @tweet %>
+<% end %>   

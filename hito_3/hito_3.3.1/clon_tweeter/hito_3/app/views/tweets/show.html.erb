@@ -1,0 +1,89 @@
+<tbody>
+   
+      <tr>
+        <td>
+          
+            <%= link_to(image_tag(@tweet.user.profile_pic, style: 'height:3rem;width;auto;'), @tweet) %>
+            
+        </td>
+
+
+        <td>
+        
+             <%= link_to @tweet.user.email, @tweet %>
+         
+        </td>
+
+
+        <td> 
+           <div> 
+             <%= @tweet.content.truncate(200)  %>
+             <% if @tweet.retweeted_id? %>
+             <div><%= "#{retweet_author(@tweet).email}: #{original_tweet(@tweet).content.truncate(200)}" %></div>
+             <% end %>
+           </div> 
+
+        </td>
+
+
+        <td><small><%=link_to "#{time_ago_in_words(@tweet.created_at)}", @tweet %> ago</small></td>
+
+
+        <td> 
+            <% if user_signed_in? %>
+                 <% if @tweet.likes.where(user_id: current_user.id).first %>
+                    <%= button_to 'Dislike', tweet_like_path(@tweet, Like.where("user_id = ?", current_user.id).where("tweet_id = ?", @tweet.id).ids), method: :delete %>
+                 <% else %>
+                    <%= button_to 'Like', tweet_likes_path(@tweet), method: :post %>
+                 <% end %>
+            <% else %> 
+                 <%= button_to 'Like', new_user_session_path %> 
+            <% end %>  
+          
+          <p><%= @tweet.likes.count %> <%= (@tweet.likes.count) == 1 ? 'Like' : 'Likes'%></p>
+          
+        </td>
+
+
+        <td>
+            <% if user_signed_in? %>
+            <%= button_to 'rt', tweet_retweet_path(@tweet), method: :get %> 
+            <% end %> 
+            <p><%= Tweet.where("retweeted_id = ?", @tweet.id).count %> 
+            <%= (Tweet.where("retweeted_id = ?", @tweet.id).count) == 1 ? 'Retweet' : 'Retweets'%></p>
+          
+        </td>
+
+
+        <td>
+             <% if user_signed_in? && @tweet.user == current_user %>
+             
+             <%= link_to 'Edit', edit_tweet_path(@tweet), class: "btn btn-warning"%>
+             
+             <% end %>
+        </td>
+
+
+        <td>
+            <% if user_signed_in? && @tweet.user == current_user %>
+            <%= link_to 'Destroy', @tweet, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %>
+            <% end %>
+            
+        </td>
+
+
+        <% tweet_likes(@tweet).reverse.each do |likes| %>
+
+         <td>  
+         
+             <%= image_tag  liked_by(likes).profile_pic, style: 'height:3rem;width;auto;' %>
+         
+         </td>
+
+        <% end  %> 
+       
+      </tr>
+      
+    
+  </tbody>
+</table>

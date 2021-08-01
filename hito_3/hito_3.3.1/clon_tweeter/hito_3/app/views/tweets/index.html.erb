@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Tweets</h1>
+
+<%= render 'searcher'%>
+
+<%  if user_signed_in? %>
+<%= render 'form', tweet: @tweet %>
+<%  end %>
+
+
+<%= render 'tweets', tweet: @tweet %>
+
+<br>
+
